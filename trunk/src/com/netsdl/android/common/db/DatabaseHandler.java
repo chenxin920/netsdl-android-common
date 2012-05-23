@@ -171,42 +171,21 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		}
 	}
 
-	// Getting single
 	public Object[] getSingleColumn(Object[] selectionArgs) {
-		return getSingleColumn(selectionArgs, null);
-
+		return getSingleColumn(selectionArgs,null);
 	}
 
-	// Getting single
 	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause) {
-		String[] strs = new String[selectionArgs.length];
-
-		for (int i = 0; i < selectionArgs.length; i++) {
-			strs[i] = selectionArgs[i].toString();
-		}
-		return getSingleColumn(strs, whereClause);
-	}
-
-	// Getting single
-	public Object[] getSingleColumn(String[] selectionArgs, String[] whereClause) {
-		String[] COLUMNS = getColumns();
-		Class<?>[] TYPES = getTypes();
 		SQLiteDatabase db = null;
-		Cursor cursor = null;
 		try {
-			db = this.getReadableDatabase();
-			cursor = db.query(getTableName(), COLUMNS,
-					DatabaseHelper.getWhereClause(whereClause, getKeys()),
-					selectionArgs, null, null, null, null);
-			return DatabaseHelper.getSingleColumn(cursor, COLUMNS, TYPES);
-
+			db = getReadableDatabase();
+			return DatabaseHelper.getSingleColumn(db, selectionArgs,
+					whereClause, getTableName(), getColumns(), getTypes(),
+					getKeys());
 		} finally {
-			if (cursor != null)
-				cursor.close();
 			if (db != null)
 				db.close();
 		}
-
 	}
 
 	// Getting multi
@@ -240,14 +219,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 				db.close();
 		}
 
-	}
-
-	public int getColumnIndex(String str) {
-		return DatabaseHelper.getColumnIndex(str,getColumns());
-	}
-	
-	public Object getColumnValue(Object[] objs, String column) {
-		return DatabaseHelper.getColumnValue(objs, column, getColumns());
 	}
 
 	public abstract String getTableName();
