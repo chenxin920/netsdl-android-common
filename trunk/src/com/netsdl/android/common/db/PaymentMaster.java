@@ -12,15 +12,15 @@ public class PaymentMaster extends DatabaseHandler {
 	public static final String[] COLUMNS = { COLUMN_ID, COLUMN_NAME,
 			COLUMN_SORT };
 
-	private static final String[] KEYS = { COLUMN_ID };
+	public static final String[] KEYS = { COLUMN_ID };
 
 	private static final Class<Integer> TYPE_ID = Integer.class;
 	private static final Class<String> TYPE_NAME = String.class;
 	private static final Class<Integer> TYPE_SORT = Integer.class;
 
-	private static final Class<?>[] TYPES = { TYPE_ID, TYPE_NAME, TYPE_SORT };
+	public static final Class<?>[] TYPES = { TYPE_ID, TYPE_NAME, TYPE_SORT };
 
-	private static final Class<?>[] KEY_TYPES = { TYPE_ID };
+	public static final Class<?>[] KEY_TYPES = { TYPE_ID };
 
 	public PaymentMaster(Context context) {
 		super(context);

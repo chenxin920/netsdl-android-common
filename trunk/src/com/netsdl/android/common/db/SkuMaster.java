@@ -43,7 +43,7 @@ public class SkuMaster extends DatabaseHandler {
 			COLUMN_BAR_CODE, COLUMN_BAR_CODE_2, COLUMN_ITEM_COST,
 			COLUMN_ITEM_STD_PRICE, COLUMN_ITEM_PRICE };
 
-	private static final String[] KEYS = { COLUMN_SKU_ID };
+	public static final String[] KEYS = { COLUMN_SKU_ID };
 
 	private static final Class<Integer> TYPE_SKU_ID = Integer.class;
 	private static final Class<String> TYPE_CAT2 = String.class;
@@ -71,7 +71,7 @@ public class SkuMaster extends DatabaseHandler {
 	private static final Class<BigDecimal> TYPE_ITEM_COST = BigDecimal.class;
 	private static final Class<BigDecimal> TYPE_ITEM_STD_PRICE = BigDecimal.class;
 	private static final Class<BigDecimal> TYPE_ITEM_PRICE = BigDecimal.class;
-	private static final Class<?>[] TYPES = { TYPE_SKU_ID, TYPE_CAT2,
+	public static final Class<?>[] TYPES = { TYPE_SKU_ID, TYPE_CAT2,
 			TYPE_CAT2_NAME, TYPE_CAT3, TYPE_CAT3_NAME, TYPE_ITEM_CD,
 			TYPE_ORIG_ITEM_CD, TYPE_ITEM_NAME, TYPE_ITEM_CAT,
 			TYPE_ITEM_CAT_NAME, TYPE_SKU_PROP_1, TYPE_SKU_PROP_1_NAME,
@@ -81,7 +81,7 @@ public class SkuMaster extends DatabaseHandler {
 			TYPE_BAR_CODE_2, TYPE_ITEM_COST, TYPE_ITEM_STD_PRICE,
 			TYPE_ITEM_PRICE };
 
-	private static final Class<?>[] KEY_TYPES = { TYPE_SKU_ID };
+	public static final Class<?>[] KEY_TYPES = { TYPE_SKU_ID };
 
 	public SkuMaster(Context context) {
 		super(context);

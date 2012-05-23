@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.netsdl.android.common.Constant;
+
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 public class DatabaseHelper {
 
@@ -41,36 +45,91 @@ public class DatabaseHelper {
 	}
 
 	// Getting single
-	public static Object[] getSingleColumn(SQLiteDatabase db,
-			Object[] selectionArgs, String table, String[] COLUMNS,
-			Class<?>[] TYPES, String[] KEYS) {
-		return getSingleColumn(db, selectionArgs, null, table, COLUMNS, TYPES,
-				KEYS);
+	public static Object[] getSingleColumn(ContentResolver contentResolver,
+			Object[] selectionArgs, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(contentResolver, selectionArgs, null,
+				clazz);
 	}
 
 	// Getting single
-	public static Object[] getSingleColumn(SQLiteDatabase db,
-			Object[] selectionArgs, String[] whereClause, String table,
-			String[] COLUMNS, Class<?>[] TYPES, String[] KEYS) {
+	public static Object[] getSingleColumn(ContentResolver contentResolver,
+			Object[] selectionArgs, String[] whereClause,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
 		String[] strs = new String[selectionArgs.length];
 
 		for (int i = 0; i < selectionArgs.length; i++) {
 			strs[i] = selectionArgs[i].toString();
 		}
-		return getSingleColumn(db, strs, whereClause, table, COLUMNS, TYPES,
-				KEYS);
+		return getSingleColumn(contentResolver,  strs, whereClause, clazz);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(ContentResolver contentResolver,
+			 String[] selectionArgs, String[] whereClause,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(clazz);
+		Uri uri = Uri.parse(Constant.PROVIDER_URI + tableName);
+		
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
+
+		Cursor cursor = null;
+		try {
+			cursor = contentResolver.query(uri, COLUMNS,
+					getWhereClause(whereClause, KEYS), selectionArgs, null);
+
+			return getSingleColumn(cursor, clazz);
+
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}
+
 	}
 
 	// Getting single
 	public static Object[] getSingleColumn(SQLiteDatabase db,
-			String[] selectionArgs, String[] whereClause, String table,
-			String[] COLUMNS, Class<?>[] TYPES, String[] KEYS) {
+			Object[] selectionArgs, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(db, selectionArgs, null, clazz);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db,
+			Object[] selectionArgs, String[] whereClause, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String[] strs = new String[selectionArgs.length];
+
+		for (int i = 0; i < selectionArgs.length; i++) {
+			strs[i] = selectionArgs[i].toString();
+		}
+		return getSingleColumn(db, strs, whereClause, clazz);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db,
+			String[] selectionArgs, String[] whereClause, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
+
 		Cursor cursor = null;
 		try {
-			cursor = db.query(table, COLUMNS,
+			cursor = db.query(tableName, COLUMNS,
 					getWhereClause(whereClause, KEYS), selectionArgs, null,
 					null, null, null);
-			return getSingleColumn(cursor, COLUMNS, TYPES);
+			return getSingleColumn(cursor, clazz);
 
 		} finally {
 			if (cursor != null)
@@ -82,8 +141,14 @@ public class DatabaseHelper {
 	}
 
 	// Getting single
-	public static Object[] getSingleColumn(Cursor cursor, String[] COLUMNS,
-			Class<?>[] TYPES) {
+	public static Object[] getSingleColumn(Cursor cursor, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		Class<?>[] TYPES = (Class<?>[]) clazz.getField(Constant.TYPES).get(
+				clazz);
+
 		if (cursor != null && cursor.getCount() > 0)
 			cursor.moveToFirst();
 		else {

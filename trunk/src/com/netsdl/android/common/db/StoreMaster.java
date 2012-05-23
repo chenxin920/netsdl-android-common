@@ -13,17 +13,17 @@ public class StoreMaster extends DatabaseHandler {
 	public static final String[] COLUMNS = { COLUMN_ID, COLUMN_MD5,
 			COLUMN_NAME, COLUMN_ROLE };
 
-	private static final String[] KEYS = { COLUMN_ID };
+	public static final String[] KEYS = { COLUMN_ID };
 
 	private static final Class<Integer> TYPE_ID = Integer.class;
 	private static final Class<String> TYPE_MD5 = String.class;
 	private static final Class<String> TYPE_NAME = String.class;
 	private static final Class<String> TYPE_ROLE = String.class;
 
-	private static final Class<?>[] TYPES = { TYPE_ID, TYPE_MD5, TYPE_NAME,
+	public static final Class<?>[] TYPES = { TYPE_ID, TYPE_MD5, TYPE_NAME,
 			TYPE_ROLE };
 
-	private static final Class<?>[] KEY_TYPES = { TYPE_ID };
+	public static final Class<?>[] KEY_TYPES = { TYPE_ID };
 
 	public StoreMaster(Context context) {
 		super(context);
