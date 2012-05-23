@@ -1,5 +1,6 @@
 package com.netsdl.android.common.dialog.progress;
 
+
 import com.netsdl.android.common.R;
 
 import android.app.Activity;

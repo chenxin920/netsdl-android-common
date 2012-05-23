@@ -53,37 +53,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		}
 	}
 
-	public Object convertStringToOjbect(Class<?> type, String str) {
-		if (str == null)
-			return null;
-		if (type.equals(String.class)) {
-			return str;
-		} else if (type.equals(Integer.class)) {
-			if ("NULL".equals(str)) {
-				return null;
-			} else {
-				try {
-					Integer iTemp = Integer.valueOf(str);
-					return iTemp;
-				} catch (NumberFormatException nfe) {
-					return null;
-				}
-			}
-		} else if (type.equals(BigDecimal.class)) {
-			return new BigDecimal(str);
-		}
-		return str;
-	}
-
 	public Map<String, Object> parserCSV(String[] datas) {
-		String[] COLUMNS = getColumns();
-		Class<?>[] TYPES = getTypes();
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		for (int i = 0; i < COLUMNS.length; i++) {
-			map.put(COLUMNS[i], convertStringToOjbect(TYPES[i], datas[i]));
-		}
-		return map;
+		return DatabaseHelper.parserCSV(datas, getColumns(), getTypes());
 	}
 
 	public Map<String, Object> parserCSV(String data) {
@@ -127,26 +98,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 	public void insert(String[] datas) {
 		Map<String, Object> mapData = parserCSV(datas);
 		insert(mapData);
-	}
-
-	public String getWhereClause() {
-		return getWhereClause(null);
-	}
-
-	public String getWhereClause(String[] strs) {
-		StringBuffer sb = new StringBuffer();
-		String[] KEYS = null;
-		if (strs == null)
-			KEYS = getKeys();
-		else
-			KEYS = strs;
-		for (int i = 0; i < KEYS.length; i++) {
-			if (i > 0)
-				sb.append(" and ");
-			sb.append(KEYS[i]);
-			sb.append(" = ?");
-		}
-		return sb.toString();
 	}
 
 	public String getGroupByString(String[] strs) {
@@ -212,7 +163,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = null;
 		try {
 			db = this.getWritableDatabase();
-			db.delete(getTableName(), getWhereClause(), whereArgs);
+			db.delete(getTableName(), DatabaseHelper.getWhereClause(getKeys()),
+					whereArgs);
 		} finally {
 			if (db != null)
 				db.close();
@@ -244,19 +196,10 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		try {
 			db = this.getReadableDatabase();
 			cursor = db.query(getTableName(), COLUMNS,
-					getWhereClause(whereClause), selectionArgs, null, null,
-					null, null);
-			if (cursor != null && cursor.getCount() > 0)
-				cursor.moveToFirst();
-			else {
-				return null;
-			}
+					DatabaseHelper.getWhereClause(whereClause, getKeys()),
+					selectionArgs, null, null, null, null);
+			return DatabaseHelper.getSingleColumn(cursor, COLUMNS, TYPES);
 
-			Object[] objs = new Object[COLUMNS.length];
-			for (int i = 0; i < COLUMNS.length; i++) {
-				objs[i] = convertStringToOjbect(TYPES[i], cursor.getString(i));
-			}
-			return objs;
 		} finally {
 			if (cursor != null)
 				cursor.close();
@@ -286,26 +229,10 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		try {
 			db = this.getReadableDatabase();
 			cursor = db.query(getTableName(), COLUMNS,
-					getWhereClause(whereClause), selectionArgs,
-					getGroupByString(groupBy), having,
+					DatabaseHelper.getWhereClause(whereClause, getKeys()),
+					selectionArgs, getGroupByString(groupBy), having,
 					getOrderByString(orderBy, isASC), null);
-			if (cursor != null && cursor.getCount() > 0)
-				cursor.moveToFirst();
-			else {
-				return null;
-			}
-
-			Object[][] objss = new Object[cursor.getCount()][COLUMNS.length];
-			int i = 0;
-			do {
-				objss[i] = new Object[COLUMNS.length];
-				for (int j = 0; j < COLUMNS.length; j++) {
-					objss[i][j] = convertStringToOjbect(TYPES[j],
-							cursor.getString(j));
-				}
-				i++;
-			} while (cursor.moveToNext());
-			return objss;
+			return DatabaseHelper.getMultiColumn(cursor, COLUMNS, TYPES);
 		} finally {
 			if (cursor != null)
 				cursor.close();
@@ -315,33 +242,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 	}
 
-	public int getColumnIndex(String str) {
-		String[] COLUMNS = getColumns();
-		for (int i = 0; i < COLUMNS.length; i++) {
-			if (COLUMNS[i].equals(str))
-				return i;
-		}
-		return -1;
-	}
-
-	public Class<?> getColumnType(String column) {
-		int index = getColumnIndex(column);
-		if (index < 0)
-			return null;
-		Class<?>[] TYPES = getTypes();
-		return TYPES[index];
-	}
-
 	public Object getColumnValue(Object[] objs, String column) {
-		if (objs == null)
-			return null;
-		int index = getColumnIndex(column);
-		if (index < 0)
-			return null;
-		if (index >= objs.length)
-			return null;
-		return objs[index];
-
+		return DatabaseHelper.getColumnValue(objs, column, getColumns());
 	}
 
 	public abstract String getTableName();
