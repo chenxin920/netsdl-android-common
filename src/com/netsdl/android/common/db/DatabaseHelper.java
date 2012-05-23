@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseHelper {
 
@@ -37,6 +38,47 @@ public class DatabaseHelper {
 			return new BigDecimal(str);
 		}
 		return str;
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db,
+			Object[] selectionArgs, String table, String[] COLUMNS,
+			Class<?>[] TYPES, String[] KEYS) {
+		return getSingleColumn(db, selectionArgs, null, table, COLUMNS, TYPES,
+				KEYS);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db,
+			Object[] selectionArgs, String[] whereClause, String table,
+			String[] COLUMNS, Class<?>[] TYPES, String[] KEYS) {
+		String[] strs = new String[selectionArgs.length];
+
+		for (int i = 0; i < selectionArgs.length; i++) {
+			strs[i] = selectionArgs[i].toString();
+		}
+		return getSingleColumn(db, strs, whereClause, table, COLUMNS, TYPES,
+				KEYS);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db,
+			String[] selectionArgs, String[] whereClause, String table,
+			String[] COLUMNS, Class<?>[] TYPES, String[] KEYS) {
+		Cursor cursor = null;
+		try {
+			cursor = db.query(table, COLUMNS,
+					getWhereClause(whereClause, KEYS), selectionArgs, null,
+					null, null, null);
+			return getSingleColumn(cursor, COLUMNS, TYPES);
+
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			if (db != null)
+				db.close();
+		}
+
 	}
 
 	// Getting single
