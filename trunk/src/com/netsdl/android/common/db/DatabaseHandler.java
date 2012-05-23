@@ -242,7 +242,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 	}
 
-	public int getColumnIndex(String str, String[] COLUMNS) {
+	public int getColumnIndex(String str) {
 		return DatabaseHelper.getColumnIndex(str,getColumns());
 	}
 	
