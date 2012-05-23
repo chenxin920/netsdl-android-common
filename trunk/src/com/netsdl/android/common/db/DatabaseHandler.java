@@ -228,19 +228,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 	// Getting single
 	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause) {
 		String[] strs = new String[selectionArgs.length];
-		// Class<?>[] KEY_TYPES = getKeyTypes();
-		// for (int i = 0; i < selectionArgs.length; i++) {
-		// if (KEY_TYPES[i].equals(String.class)) {
-		// strs[i] = selectionArgs[i].toString();
-		// } else if (KEY_TYPES[i].equals(Integer.class)) {
-		// strs[i] = selectionArgs[i].toString();
-		// } else if (KEY_TYPES[i].equals(BigDecimal.class)) {
-		// strs[i] = selectionArgs[i].toString();
-		// }else{
-		// strs[i] = selectionArgs[i].toString();
-		// }
-		//
-		// }
+
 		for (int i = 0; i < selectionArgs.length; i++) {
 			strs[i] = selectionArgs[i].toString();
 		}
@@ -355,79 +343,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		return objs[index];
 
 	}
-
-	// public List<SkuMasterDatabaseHandler> getAllContacts() {
-	// List<SkuMasterDatabaseHandler> skuMasterList = new
-	// ArrayList<SkuMasterDatabaseHandler>();
-	//
-	// String selectQuery = "SELECT * FROM " + getTableName();
-	//
-	// SQLiteDatabase db = this.getWritableDatabase();
-	// Cursor cursor = db.rawQuery(selectQuery, null);
-	//
-	// // looping through all rows and adding to list
-	// if (cursor.moveToFirst()) {
-	// do {
-	// SkuMasterDatabaseHandler skuMaster = new SkuMasterDatabaseHandler();
-	// skuMaster.setSkuId(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_ID));
-	// skuMaster.setCat2(cursor.getString(DatabaseHandler.INDEX_CAT2));
-	// skuMaster.setCat2Name(cursor
-	// .getString(DatabaseHandler.INDEX_CAT2_NAME));
-	// skuMaster.setCat3(cursor.getString(DatabaseHandler.INDEX_CAT3));
-	// skuMaster.setCat3Name(cursor
-	// .getString(DatabaseHandler.INDEX_CAT3_NAME));
-	// skuMaster.setItemCd(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_CD));
-	// skuMaster.setOrigItemCd(cursor
-	// .getString(DatabaseHandler.INDEX_ORIG_ITEM_CD));
-	// skuMaster.setItemName(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_NAME));
-	// skuMaster.setItemCat(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_CAT));
-	// skuMaster.setItemCatName(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_CAT_NAME));
-	// skuMaster.setSkuProp1(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_1));
-	// skuMaster.setSkuProp1Name(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_1_NAME));
-	// skuMaster.setPl1DispIndex(cursor
-	// .getString(DatabaseHandler.INDEX_PL1_DISP_INDEX));
-	// skuMaster.setSkuProp2(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_2));
-	// skuMaster.setSkuProp2Name(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_2_NAME));
-	// skuMaster.setPl2DispIndex(cursor
-	// .getString(DatabaseHandler.INDEX_PL2_DISP_INDEX));
-	// skuMaster.setSkuProp3(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_3));
-	// skuMaster.setSkuProp3Name(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_PROP_3_NAME));
-	// skuMaster.setPl3DispIndex(cursor
-	// .getString(DatabaseHandler.INDEX_PL3_DISP_INDEX));
-	// skuMaster.setSkuCd(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_CD));
-	// skuMaster.setSkuName(cursor
-	// .getString(DatabaseHandler.INDEX_SKU_NAME));
-	// skuMaster.setBarCode(cursor
-	// .getString(DatabaseHandler.INDEX_BAR_CODE));
-	// skuMaster.setBarCode2(cursor
-	// .getString(DatabaseHandler.INDEX_BAR_CODE_2));s
-	// skuMaster.setItemCost(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_COST));
-	// skuMaster.setItemStdPrice(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_STD_PRICE));
-	// skuMaster.setItemPrice(cursor
-	// .getString(DatabaseHandler.INDEX_ITEM_PRICE));
-	// // Adding contact to list
-	// skuMasterList.add(skuMaster);
-	// } while (cursor.moveToNext());
-	// }
-	//
-	// // return contact list
-	// return skuMasterList;
-	//
-	// }
 
 	public abstract String getTableName();
 
