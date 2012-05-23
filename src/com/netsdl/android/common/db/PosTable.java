@@ -16,7 +16,7 @@ public class PosTable extends DatabaseHandler {
 	public static final String[] COLUMNS = { COLUMN_UUID, COLUMN_IP_FLG,
 			COLUMN_ID, COLUMN_COUNT, COLUMN_TIMPSTAMP };
 
-	private static final String[] KEYS = { COLUMN_UUID, COLUMN_IP_FLG,
+	public static final String[] KEYS = { COLUMN_UUID, COLUMN_IP_FLG,
 			COLUMN_ID };
 
 	private static final Class<String> TYPE_UUID = String.class;
@@ -25,10 +25,10 @@ public class PosTable extends DatabaseHandler {
 	private static final Class<Integer> TYPE_COUNT = Integer.class;
 	private static final Class<String> TYPE_TIMPSTAMP = String.class;
 
-	private static final Class<?>[] TYPES = { TYPE_UUID, TYPE_IP_FLG, TYPE_ID,
+	public static final Class<?>[] TYPES = { TYPE_UUID, TYPE_IP_FLG, TYPE_ID,
 			TYPE_COUNT, TYPE_TIMPSTAMP };
 
-	private static final Class<?>[] KEY_TYPES = { TYPE_UUID, TYPE_IP_FLG,
+	public static final Class<?>[] KEY_TYPES = { TYPE_UUID, TYPE_IP_FLG,
 			TYPE_ID };
 
 	public PosTable(Context context) {

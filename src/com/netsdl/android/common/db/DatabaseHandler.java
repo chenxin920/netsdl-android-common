@@ -171,17 +171,16 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		}
 	}
 
-	public Object[] getSingleColumn(Object[] selectionArgs) {
+	public Object[] getSingleColumn(Object[] selectionArgs) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
 		return getSingleColumn(selectionArgs,null);
 	}
 
-	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause) {
+	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
 		SQLiteDatabase db = null;
 		try {
 			db = getReadableDatabase();
 			return DatabaseHelper.getSingleColumn(db, selectionArgs,
-					whereClause, getTableName(), getColumns(), getTypes(),
-					getKeys());
+					whereClause, getClass());
 		} finally {
 			if (db != null)
 				db.close();

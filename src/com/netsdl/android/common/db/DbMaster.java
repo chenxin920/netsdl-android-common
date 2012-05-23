@@ -10,14 +10,14 @@ public class DbMaster extends DatabaseHandler {
 
 	public static final String[] COLUMNS = { COLUMN_NAME, COLUMN_VERSION };
 
-	private static final String[] KEYS = { COLUMN_NAME };
+	public static final String[] KEYS = { COLUMN_NAME };
 
 	private static final Class<String> TYPE_NAME = String.class;
 	private static final Class<String> TYPE_VERSION = String.class;
 
-	private static final Class<?>[] TYPES = { TYPE_NAME, TYPE_VERSION };
+	public static final Class<?>[] TYPES = { TYPE_NAME, TYPE_VERSION };
 
-	private static final Class<?>[] KEY_TYPES = { TYPE_NAME };
+	public static final Class<?>[] KEY_TYPES = { TYPE_NAME };
 
 	public DbMaster(Context context) {
 		super(context);
