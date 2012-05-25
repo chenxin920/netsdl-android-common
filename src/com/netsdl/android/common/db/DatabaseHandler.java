@@ -100,38 +100,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		insert(mapData);
 	}
 
-	public String getGroupByString(String[] strs) {
-		if (strs == null || strs.length == 0)
-			return null;
-
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < strs.length; i++) {
-			if (i > 0)
-				sb.append(" , ");
-			sb.append(strs[i]);
-		}
-		return sb.toString();
-	}
-
-	public String getOrderByString(String[] strs) {
-		return getOrderByString(strs, true);
-	}
-
-	public String getOrderByString(String[] strs, boolean isASC) {
-		if (strs == null || strs.length == 0)
-			return null;
-
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < strs.length; i++) {
-			if (i > 0)
-				sb.append(" , ");
-			sb.append(strs[i]);
-		}
-
-		sb.append(isASC ? " ASC" : " DESC");
-		return sb.toString();
-	}
-
 	public void deleteByKey(String data) {
 		ContentValues values = new ContentValues();
 		Map<String, Object> mapData = parserCSV(data);
@@ -171,11 +139,20 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		}
 	}
 
-	public Object[] getSingleColumn(Object[] selectionArgs) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
-		return getSingleColumn(selectionArgs,null);
+	public Object[] getSingleColumn() throws IllegalArgumentException,
+			SecurityException, IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(null);
 	}
 
-	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause) throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
+	public Object[] getSingleColumn(Object[] selectionArgs)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(selectionArgs, null);
+	}
+
+	public Object[] getSingleColumn(Object[] selectionArgs, String[] whereClause)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
 		SQLiteDatabase db = null;
 		try {
 			db = getReadableDatabase();
@@ -188,29 +165,39 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 	}
 
 	// Getting multi
-	public Object[][] getMultiColumn(String[] selectionArgs,
-			String[] whereClause, String[] groupBy, String having,
-			String[] orderBy, String limit) {
-		return getMultiColumn(selectionArgs, whereClause, groupBy, having,
-				orderBy, limit, true);
-
+	public Object[][] getMultiColumn(String[] groupBy, String having,
+			String[] orderBy, String limit) throws IllegalArgumentException,
+			SecurityException, IllegalAccessException, NoSuchFieldException {
+		return getMultiColumn(new String[] {}, new String[] {}, groupBy,
+				having, orderBy, limit, true);
 	}
 
 	// Getting multi
 	public Object[][] getMultiColumn(String[] selectionArgs,
 			String[] whereClause, String[] groupBy, String having,
-			String[] orderBy, String limit, boolean isASC) {
+			String[] orderBy, String limit) throws IllegalArgumentException,
+			SecurityException, IllegalAccessException, NoSuchFieldException {
+		return getMultiColumn(selectionArgs, whereClause, groupBy, having,
+				orderBy, limit, true);
+	}
+
+	// Getting multi
+	public Object[][] getMultiColumn(String[] selectionArgs,
+			String[] whereClause, String[] groupBy, String having,
+			String[] orderBy, String limit, boolean isASC)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
 		String[] COLUMNS = getColumns();
-		Class<?>[] TYPES = getTypes();
 		SQLiteDatabase db = null;
 		Cursor cursor = null;
 		try {
 			db = this.getReadableDatabase();
 			cursor = db.query(getTableName(), COLUMNS,
 					DatabaseHelper.getWhereClause(whereClause, getKeys()),
-					selectionArgs, getGroupByString(groupBy), having,
-					getOrderByString(orderBy, isASC), null);
-			return DatabaseHelper.getMultiColumn(cursor, COLUMNS, TYPES);
+					selectionArgs, DatabaseHelper.getGroupByString(groupBy),
+					having, DatabaseHelper.getOrderByString(orderBy, isASC),
+					limit);
+			return DatabaseHelper.getMultiColumn(cursor, getClass());
 		} finally {
 			if (cursor != null)
 				cursor.close();
