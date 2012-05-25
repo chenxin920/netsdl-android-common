@@ -47,34 +47,42 @@ public class DatabaseHelper {
 
 	// Getting single
 	public static Object[] getSingleColumn(ContentResolver contentResolver,
-			Object[] selectionArgs, Class<?> clazz)
-			throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchFieldException {
-		return getSingleColumn(contentResolver, selectionArgs, null,
-				clazz);
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(contentResolver, null, clazz);
 	}
 
 	// Getting single
 	public static Object[] getSingleColumn(ContentResolver contentResolver,
-			Object[] selectionArgs, String[] whereClause,
-			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			Object[] selectionArgs, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(contentResolver, selectionArgs, null, clazz);
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(ContentResolver contentResolver,
+			Object[] selectionArgs, String[] whereClause, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 		String[] strs = new String[selectionArgs.length];
 
 		for (int i = 0; i < selectionArgs.length; i++) {
 			strs[i] = selectionArgs[i].toString();
 		}
-		return getSingleColumn(contentResolver,  strs, whereClause, clazz);
+		return getSingleColumn(contentResolver, strs, whereClause, clazz);
 	}
 
 	// Getting single
 	public static Object[] getSingleColumn(ContentResolver contentResolver,
-			 String[] selectionArgs, String[] whereClause,
-			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			String[] selectionArgs, String[] whereClause, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 
-		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(clazz);
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
 		Uri uri = Uri.parse(Constant.PROVIDER_URI + tableName);
-		
+
 		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
 				clazz);
 		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
@@ -91,6 +99,13 @@ public class DatabaseHelper {
 				cursor.close();
 		}
 
+	}
+
+	// Getting single
+	public static Object[] getSingleColumn(SQLiteDatabase db, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getSingleColumn(db, null, clazz);
 	}
 
 	// Getting single
@@ -163,8 +178,75 @@ public class DatabaseHelper {
 		return objs;
 	}
 
-	public static Object[][] getMultiColumn(Cursor cursor, String[] COLUMNS,
-			Class<?>[] TYPES) {
+	// Getting Multi
+	public static Object[] getMultiColumn(ContentResolver contentResolver,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getMultiColumn(contentResolver, null, clazz);
+	}
+
+	// Getting Multi
+	public static Object[] getMultiColumn(ContentResolver contentResolver,
+			Object[] selectionArgs, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		return getMultiColumn(contentResolver, selectionArgs, null, clazz);
+	}
+
+	// Getting Multi
+	public static Object[] getMultiColumn(ContentResolver contentResolver,
+			Object[] selectionArgs, String[] whereClause, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String[] strs = new String[selectionArgs.length];
+
+		for (int i = 0; i < selectionArgs.length; i++) {
+			strs[i] = selectionArgs[i].toString();
+		}
+		return getMultiColumn(contentResolver, strs, whereClause, clazz);
+	}
+
+	// Getting Multi
+	public static Object[][] getMultiColumn(ContentResolver contentResolver,
+			String[] selectionArgs, String[] whereClause, String[] groupBy,
+			String having, String[] orderBy, String limit, boolean isASC,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
+		Uri uri = Uri.parse(Constant.PROVIDER_URI + tableName);
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
+
+		Cursor cursor = null;
+		try {
+			cursor = contentResolver.query(
+					uri,
+					COLUMNS,
+					getWhereClause(whereClause, KEYS),
+					selectionArgs,
+					convertContentResolverQueryString(groupBy, having, orderBy,
+							limit, isASC));
+
+			return getMultiColumn(cursor, clazz);
+
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}
+
+	}
+
+	public static Object[][] getMultiColumn(Cursor cursor, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		Class<?>[] TYPES = (Class<?>[]) clazz.getField(Constant.TYPES).get(
+				clazz);
 
 		if (cursor != null && cursor.getCount() > 0)
 			cursor.moveToFirst();
@@ -202,6 +284,38 @@ public class DatabaseHelper {
 		return sb.toString();
 	}
 
+	public static String getOrderByString(String[] strs) {
+		return getOrderByString(strs, true);
+	}
+
+	public static String getOrderByString(String[] strs, boolean isASC) {
+		if (strs == null || strs.length == 0)
+			return null;
+
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < strs.length; i++) {
+			if (i > 0)
+				sb.append(" , ");
+			sb.append(strs[i]);
+		}
+
+		sb.append(isASC ? " ASC" : " DESC");
+		return sb.toString();
+	}
+
+	public static String getGroupByString(String[] strs) {
+		if (strs == null || strs.length == 0)
+			return null;
+
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < strs.length; i++) {
+			if (i > 0)
+				sb.append(" , ");
+			sb.append(strs[i]);
+		}
+		return sb.toString();
+	}
+
 	public static int getColumnIndex(String str, String[] COLUMNS) {
 		for (int i = 0; i < COLUMNS.length; i++) {
 			if (COLUMNS[i].equals(str))
@@ -230,4 +344,17 @@ public class DatabaseHelper {
 		return objs[index];
 	}
 
+	public static String convertContentResolverQueryString(String[] groupBy,
+			String having, String[] orderBy, String limit, boolean isASC) {
+		String strGroupBy = getGroupByString(groupBy);
+		if (strGroupBy == null)
+			strGroupBy = "";
+		if (having == null)
+			having = "";
+		String strOrderBy = getOrderByString(orderBy, isASC);
+		if (strOrderBy == null)
+			strOrderBy = "";
+		return strGroupBy + Constant.SEMICOLON + having + Constant.SEMICOLON
+				+ strOrderBy + Constant.SEMICOLON + limit;
+	}
 }
