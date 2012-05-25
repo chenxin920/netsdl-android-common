@@ -220,6 +220,8 @@ public class DatabaseHelper {
 				clazz);
 		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
 
+		
+		Log.d("getWhereClause(whereClause, KEYS)",getWhereClause(whereClause, KEYS));
 		Cursor cursor = null;
 		try {
 			cursor = contentResolver.query(
@@ -348,12 +350,14 @@ public class DatabaseHelper {
 			String having, String[] orderBy, String limit, boolean isASC) {
 		String strGroupBy = getGroupByString(groupBy);
 		if (strGroupBy == null)
-			strGroupBy = "";
+			strGroupBy = " ";
 		if (having == null)
-			having = "";
+			having = " ";
 		String strOrderBy = getOrderByString(orderBy, isASC);
 		if (strOrderBy == null)
-			strOrderBy = "";
+			strOrderBy = " ";
+		if (limit == null)
+			limit = " ";
 		return strGroupBy + Constant.SEMICOLON + having + Constant.SEMICOLON
 				+ strOrderBy + Constant.SEMICOLON + limit;
 	}
