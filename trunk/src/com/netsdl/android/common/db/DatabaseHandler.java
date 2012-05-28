@@ -62,27 +62,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		return parserCSV(datas);
 	}
 
-	private void insert(Map<String, Object> mapData) {
+	private void insert(Map<String, Object> mapData)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
 		SQLiteDatabase db = null;
 		try {
 			db = this.getWritableDatabase();
-			ContentValues values = new ContentValues();
-			String[] COLUMNS = getColumns();
-			for (int i = 0; i < COLUMNS.length; i++) {
-				Object obj = mapData.get(COLUMNS[i]);
-				if (obj == null) {
-					values.put(COLUMNS[i], "");
-				} else if (obj instanceof String) {
-					values.put(COLUMNS[i], obj.toString());
-				} else if (obj instanceof Integer) {
-					values.put(COLUMNS[i], (Integer) obj);
-				} else if (obj instanceof BigDecimal) {
-					values.put(COLUMNS[i], ((BigDecimal) obj).toString());
-				}
-			}
-			// Inserting Row
-			// db.insert(getTableName(), null, values);
-			db.replace(getTableName(), null, values);
+			DatabaseHelper.insert(db, mapData, getClass());
 		} finally {
 			if (db != null)
 				db.close();
@@ -90,12 +76,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 	}
 
-	public void insert(String data) {
+	public void insert(String data) throws IllegalArgumentException,
+			SecurityException, IllegalAccessException, NoSuchFieldException {
 		Map<String, Object> mapData = parserCSV(data);
 		insert(mapData);
 	}
 
-	public void insert(String[] datas) {
+	public void insert(String[] datas) throws IllegalArgumentException,
+			SecurityException, IllegalAccessException, NoSuchFieldException {
 		Map<String, Object> mapData = parserCSV(datas);
 		insert(mapData);
 	}

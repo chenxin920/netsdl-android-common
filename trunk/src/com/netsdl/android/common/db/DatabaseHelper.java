@@ -7,12 +7,23 @@ import java.util.Map;
 import com.netsdl.android.common.Constant;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
 public class DatabaseHelper {
+
+	public static Map<String, Object> parserCSV(String[] datas, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+		Class<?>[] TYPES = (Class<?>[]) clazz.getField(Constant.TYPES).get(
+				clazz);
+		return parserCSV(datas, COLUMNS, TYPES);
+	}
 
 	public static Map<String, Object> parserCSV(String[] datas,
 			String[] COLUMNS, Class<?>[] TYPES) {
@@ -178,6 +189,82 @@ public class DatabaseHelper {
 		return objs;
 	}
 
+	public static void insert(SQLiteDatabase db, String[] datas, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		Map<String, Object> mapData = DatabaseHelper.parserCSV(datas, clazz);
+		insert(db, mapData, clazz);
+	}
+
+	public static void insert(SQLiteDatabase db, Map<String, Object> mapData,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+
+		ContentValues values = new ContentValues();
+
+		for (int i = 0; i < COLUMNS.length; i++) {
+			Object obj = mapData.get(COLUMNS[i]);
+			if (obj == null) {
+				values.put(COLUMNS[i], "");
+			} else if (obj instanceof String) {
+				values.put(COLUMNS[i], obj.toString());
+			} else if (obj instanceof Integer) {
+				values.put(COLUMNS[i], (Integer) obj);
+			} else if (obj instanceof BigDecimal) {
+				values.put(COLUMNS[i], ((BigDecimal) obj).toString());
+			}
+		}
+
+		db.replace(tableName, null, values);
+
+	}
+
+	public static void insert(ContentResolver contentResolver, String[] datas,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		Map<String, Object> mapData = DatabaseHelper.parserCSV(datas, clazz);
+		insert(contentResolver, mapData, clazz);
+
+	}
+
+	// Getting insert
+
+	public static void insert(ContentResolver contentResolver,
+			Map<String, Object> mapData, Class<?> clazz)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
+
+		Uri uri = Uri.parse(Constant.PROVIDER_URI + tableName);
+
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+
+		ContentValues values = new ContentValues();
+
+		for (int i = 0; i < COLUMNS.length; i++) {
+			Object obj = mapData.get(COLUMNS[i]);
+			if (obj == null) {
+				values.put(COLUMNS[i], "");
+			} else if (obj instanceof String) {
+				values.put(COLUMNS[i], obj.toString());
+			} else if (obj instanceof Integer) {
+				values.put(COLUMNS[i], (Integer) obj);
+			} else if (obj instanceof BigDecimal) {
+				values.put(COLUMNS[i], ((BigDecimal) obj).toString());
+			}
+		}
+
+		contentResolver.insert(uri, values);
+
+	}
+
 	// Getting Multi
 	public static Object[] getMultiColumn(ContentResolver contentResolver,
 			Class<?> clazz) throws IllegalArgumentException, SecurityException,
@@ -203,7 +290,9 @@ public class DatabaseHelper {
 		for (int i = 0; i < selectionArgs.length; i++) {
 			strs[i] = selectionArgs[i].toString();
 		}
-		return getMultiColumn(contentResolver, strs, whereClause, clazz);
+		// return getMultiColumn(contentResolver, strs, whereClause, clazz);
+		return getMultiColumn(contentResolver, strs, whereClause, null, null,
+				null, null, true, clazz);
 	}
 
 	// Getting Multi
@@ -220,8 +309,8 @@ public class DatabaseHelper {
 				clazz);
 		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
 
-		
-		Log.d("getWhereClause(whereClause, KEYS)",getWhereClause(whereClause, KEYS));
+		Log.d("getWhereClause(whereClause, KEYS)",
+				getWhereClause(whereClause, KEYS));
 		Cursor cursor = null;
 		try {
 			cursor = contentResolver.query(
