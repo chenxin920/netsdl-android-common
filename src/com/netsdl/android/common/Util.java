@@ -117,6 +117,10 @@ public class Util {
 		} catch (ClientProtocolException e) {
 		} catch (URISyntaxException e) {
 		} catch (IOException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (SecurityException e) {
+		} catch (IllegalAccessException e) {
+		} catch (NoSuchFieldException e) {
 		} finally {
 
 			if (in != null) {
