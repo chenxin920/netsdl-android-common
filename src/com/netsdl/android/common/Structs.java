@@ -2,6 +2,8 @@ package com.netsdl.android.common;
 
 import java.math.BigDecimal;
 
+import com.netsdl.android.main.R;
+
 public class Structs {
 	public class Item {
 		public Item() {
@@ -21,4 +23,69 @@ public class Structs {
 		}
 	}
 
+	public enum Type {
+		type1 {
+			public DocumentType toDocumentType() {
+				return DocumentType.DO;
+			}
+
+			public RtnType toRtnType() {
+				return RtnType.P1;
+			}
+		},
+		type2 {
+			public DocumentType toDocumentType() {
+				return DocumentType.DO;
+			}
+
+			public RtnType toRtnType() {
+				return RtnType.M1;
+			}
+		},
+		type3 {
+			public DocumentType toDocumentType() {
+				return DocumentType.RO;
+			}
+
+			public RtnType toRtnType() {
+				return RtnType.M1;
+			}
+		};
+
+		public DocumentType toDocumentType() {
+			return null;
+		}
+
+		public RtnType toRtnType() {
+			return null;
+		}
+
+	}
+
+	public enum DocumentType {
+		DO {
+			public String toString() {
+				return "DO";
+			}
+		},
+		RO {
+			public String toString() {
+				return "RO";
+			}
+		};
+
+	}
+
+	public enum RtnType {
+		P1 {
+			public String toString() {
+				return "1";
+			}
+		},
+		M1 {
+			public String toString() {
+				return "-1";
+			}
+		}
+	}
 }
