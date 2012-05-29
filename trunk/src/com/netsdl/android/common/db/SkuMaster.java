@@ -88,7 +88,7 @@ public class SkuMaster extends DatabaseHandler {
 	}
 
 	// Contacts table name
-	public static final String TABLE_NAME = "Sku_master";
+	public static final String TABLE_NAME = "sku_master";
 
 	@Override
 	public String getTableName() {
