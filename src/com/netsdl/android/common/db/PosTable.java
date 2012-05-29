@@ -1,35 +1,69 @@
 package com.netsdl.android.common.db;
 
+import java.math.BigDecimal;
+
 import android.content.Context;
 
 public class PosTable extends DatabaseHandler {
-	public static final String FLG_I = "I";
-	public static final String FLG_P = "P";
+	public static final String COLUMN_ORDER_NO = "order_no"; // 单据号
+	public static final String COLUMN_ORDER_DATE = "order_date"; // 单据日期
+	public static final String COLUMN_CREATE_DATE = "create_date"; // 登录日期
+	public static final String COLUMN_ORDER_TYPE = "order_type"; // 单据类型
+	public static final String COLUMN_RTN = "rtn"; // 退货标记
+	public static final String COLUMN_WH_NO = "wh_no"; // 仓库NO
+	public static final String COLUMN_WH_NAME = "wh_name"; // 仓库名称
+	public static final String COLUMN_CUST_NO = "cust_no"; // 客户NO
+	public static final String COLUMN_CUST_NAME = "cust_name"; // 客户名称
+	public static final String COLUMN_USER_NO = "user_no"; // 营业员NO
+	public static final String COLUMN_USER_NAME = "user_name"; // 营业员名称
+	public static final String COLUMN_FLAG = "flag"; // 明细标记（销售、付款）
+	public static final String COLUMN_SKU_CD = "sku_cd"; // SKU编码
+	public static final String COLUMN_ITEM_NAME = "item_name"; // 商品名称
+	public static final String COLUMN_ITEM_COST = "item_cost"; // 成本价
+	public static final String COLUMN_S_PRICE = "s_price"; // 标准单价
+	public static final String COLUMN_P_PRICE = "p_price"; // 销售单价
+	public static final String COLUMN_QTY = "qty"; // 数量
+	public static final String COLUMN_S_AMT = "s_amt"; // 标准金额
+	public static final String COLUMN_P_AMT = "p_amt"; // 销售金额
 
-	// Contacts Table Columns names
-	public static final String COLUMN_UUID = "uuid";
-	public static final String COLUMN_IP_FLG = "ip_flg";
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_COUNT = "count";
-	public static final String COLUMN_TIMPSTAMP = "timestamp";
+	public static final String[] COLUMNS = { COLUMN_ORDER_NO,
+			COLUMN_ORDER_DATE, COLUMN_CREATE_DATE, COLUMN_ORDER_TYPE,
+			COLUMN_RTN, COLUMN_WH_NO, COLUMN_WH_NAME, COLUMN_CUST_NO,
+			COLUMN_CUST_NAME, COLUMN_USER_NO, COLUMN_USER_NAME, COLUMN_FLAG,
+			COLUMN_SKU_CD, COLUMN_ITEM_NAME, COLUMN_ITEM_COST, COLUMN_S_PRICE,
+			COLUMN_P_PRICE, COLUMN_QTY, COLUMN_S_AMT, COLUMN_P_AMT };
 
-	public static final String[] COLUMNS = { COLUMN_UUID, COLUMN_IP_FLG,
-			COLUMN_ID, COLUMN_COUNT, COLUMN_TIMPSTAMP };
+	public static final String[] KEYS = { COLUMN_ORDER_NO, COLUMN_SKU_CD };
 
-	public static final String[] KEYS = { COLUMN_UUID, COLUMN_IP_FLG,
-			COLUMN_ID };
+	public static final Class<String> TYPE_ORDER_NO = String.class;
+	public static final Class<String> TYPE_ORDER_DATE = String.class;
+	public static final Class<String> TYPE_CREATE_DATE = String.class;
+	public static final Class<String> TYPE_ORDER_TYPE = String.class;
+	public static final Class<Integer> TYPE_RTN = Integer.class;
+	public static final Class<String> TYPE_WH_NO = String.class;
+	public static final Class<String> TYPE_WH_NAME = String.class;
+	public static final Class<String> TYPE_CUST_NO = String.class;
+	public static final Class<String> TYPE_CUST_NAME = String.class;
+	public static final Class<String> TYPE_USER_NO = String.class;
+	public static final Class<String> TYPE_USER_NAME = String.class;
+	public static final Class<String> TYPE_FLAG = String.class;
+	public static final Class<String> TYPE_SKU_CD = String.class;
+	public static final Class<String> TYPE_ITEM_NAME = String.class;
+	public static final Class<BigDecimal> TYPE_ITEM_COST = BigDecimal.class;
+	public static final Class<BigDecimal> TYPE_S_PRICE = BigDecimal.class;
+	public static final Class<BigDecimal> TYPE_P_PRICE = BigDecimal.class;
+	public static final Class<BigDecimal> TYPE_QTY = BigDecimal.class;
+	public static final Class<BigDecimal> TYPE_S_AMT = BigDecimal.class;
+	public static final Class<BigDecimal> TYPE_P_AMT = BigDecimal.class;
 
-	private static final Class<String> TYPE_UUID = String.class;
-	private static final Class<String> TYPE_IP_FLG = String.class;
-	private static final Class<Integer> TYPE_ID = Integer.class;
-	private static final Class<Integer> TYPE_COUNT = Integer.class;
-	private static final Class<String> TYPE_TIMPSTAMP = String.class;
+	public static final Class<?>[] TYPES = { TYPE_ORDER_NO, TYPE_ORDER_DATE,
+			TYPE_CREATE_DATE, TYPE_ORDER_TYPE, TYPE_RTN, TYPE_WH_NO,
+			TYPE_WH_NAME, TYPE_CUST_NO, TYPE_CUST_NAME, TYPE_USER_NO,
+			TYPE_USER_NAME, TYPE_FLAG, TYPE_SKU_CD, TYPE_ITEM_NAME,
+			TYPE_ITEM_COST, TYPE_S_PRICE, TYPE_P_PRICE, TYPE_QTY, TYPE_S_AMT,
+			TYPE_P_AMT };
 
-	public static final Class<?>[] TYPES = { TYPE_UUID, TYPE_IP_FLG, TYPE_ID,
-			TYPE_COUNT, TYPE_TIMPSTAMP };
-
-	public static final Class<?>[] KEY_TYPES = { TYPE_UUID, TYPE_IP_FLG,
-			TYPE_ID };
+	public static final Class<?>[] KEY_TYPES = { TYPE_ORDER_NO, TYPE_SKU_CD };
 
 	public PosTable(Context context) {
 		super(context);
@@ -66,12 +100,21 @@ public class PosTable extends DatabaseHandler {
 	@Override
 	public String getCreateTableSql() {
 		String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
-				+ COLUMN_UUID + " varchar(256) NOT NULL " + "," + COLUMN_IP_FLG
-				+ " varchar(256) NOT NULL " + "," + COLUMN_ID
-				+ " int NOT NULL " + "," + COLUMN_COUNT + " int " + ","
-				+ COLUMN_TIMPSTAMP + " varchar(256) " + ", primary key ( "
-				+ COLUMN_UUID + " ," + COLUMN_IP_FLG + " , " + COLUMN_ID
-				+ " ) " + ")";
+				+ COLUMN_ORDER_NO + " varchar(32) NOT NULL,"
+				+ COLUMN_ORDER_DATE + " datetime(8)," + COLUMN_CREATE_DATE
+				+ " datetime(8)," + COLUMN_ORDER_TYPE + " varchar(32),"
+				+ COLUMN_RTN + " int," + COLUMN_WH_NO + " varchar(32),"
+				+ COLUMN_WH_NAME + " varchar(64)," + COLUMN_CUST_NO
+				+ " varchar(32)," + COLUMN_CUST_NAME + " varchar(64),"
+				+ COLUMN_USER_NO + " varchar(32)," + COLUMN_USER_NAME
+				+ " varchar(64)," + COLUMN_FLAG + " varchar(32),"
+				+ COLUMN_SKU_CD + " varchar(32) NOT NULL," + COLUMN_ITEM_NAME
+				+ " varchar(128)," + COLUMN_ITEM_COST + " decimal(16, 2),"
+				+ COLUMN_S_PRICE + " decimal(16, 2)," + COLUMN_P_PRICE
+				+ " decimal(16, 2)," + COLUMN_QTY + " decimal(16, 2),"
+				+ COLUMN_S_AMT + " decimal(16, 2)," + COLUMN_P_AMT
+				+ " decimal(16, 2)" + ", primary key ( " + COLUMN_ORDER_NO
+				+ " ," + COLUMN_SKU_CD + " ) " + ")";
 		return CREATE_TABLE;
 	}
 }
