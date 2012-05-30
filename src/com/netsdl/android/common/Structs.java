@@ -2,8 +2,6 @@ package com.netsdl.android.common;
 
 import java.math.BigDecimal;
 
-import com.netsdl.android.main.R;
-
 public class Structs {
 	public class Item {
 		public Item() {
