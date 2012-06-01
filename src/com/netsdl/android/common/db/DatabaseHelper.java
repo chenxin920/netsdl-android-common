@@ -29,7 +29,9 @@ public class DatabaseHelper {
 			String[] COLUMNS, Class<?>[] TYPES) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < COLUMNS.length; i++) {
-			map.put(COLUMNS[i], convertStringToOjbect(TYPES[i], datas[i]));
+			map.put(COLUMNS[i],
+					convertStringToOjbect(TYPES[i], i >= datas.length ? null
+							: datas[i]));
 		}
 		return map;
 	}
