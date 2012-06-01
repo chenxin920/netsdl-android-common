@@ -20,8 +20,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.netsdl.android.common.db.SkuMaster;
 
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Util {
@@ -132,7 +137,6 @@ public class Util {
 			}
 
 		}
-
 	}
 
 	boolean isTableExists(SQLiteDatabase db, String tableName) {
@@ -193,6 +197,17 @@ public class Util {
 		String s = UUID.randomUUID().toString();
 		return s.substring(0, 8) + s.substring(9, 13) + s.substring(14, 18)
 				+ s.substring(19, 23) + s.substring(24);
+	}
+	
+	public static String getLocalMacAddress(Context context) { 
+        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);  
+        WifiInfo info = wifi.getConnectionInfo();  
+        return info.getMacAddress();  
+    }
+	
+	public static String getLocalDeviceId(Context context) {
+		TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		return telephonyManager.getDeviceId();
 	}
 
 }
