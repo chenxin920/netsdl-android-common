@@ -30,6 +30,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Util {
+	public static final String DEFAULT_LOCAL_DEVICE_ID = "000000000000000";
 	private static final String INIT_URL = "http://cyr.dip.jp/init.txt";
 
 	public static Map<String, String> getInitInfo() throws URISyntaxException,
@@ -198,15 +199,17 @@ public class Util {
 		return s.substring(0, 8) + s.substring(9, 13) + s.substring(14, 18)
 				+ s.substring(19, 23) + s.substring(24);
 	}
-	
-	public static String getLocalMacAddress(Context context) { 
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);  
-        WifiInfo info = wifi.getConnectionInfo();  
-        return info.getMacAddress();  
-    }
-	
+
+	public static String getLocalMacAddress(Context context) {
+		WifiManager wifi = (WifiManager) context
+				.getSystemService(Context.WIFI_SERVICE);
+		WifiInfo info = wifi.getConnectionInfo();
+		return info.getMacAddress();
+	}
+
 	public static String getLocalDeviceId(Context context) {
-		TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		TelephonyManager telephonyManager = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDeviceId();
 	}
 
