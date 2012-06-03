@@ -86,4 +86,20 @@ public class Structs {
 			}
 		}
 	}
+
+	public class DeviceItem {
+		public DeviceItem() {
+
+		}
+
+		public String deviceID;
+		public String field_01;
+		public String field_02;
+		public String field_03;
+		public String field_04;
+		public String field_05;
+		public String field_06;
+
+	}
+
 }
