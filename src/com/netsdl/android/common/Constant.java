@@ -14,5 +14,10 @@ public class Constant {
 	public static final String TYPES = "TYPES";
 	public static final String KEYS = "KEYS";
 		
+	public static final String ORDER_FLAG_SKU = "SKU";
+	public static final String ORDER_FLAG_PAY = "PAY";
+	public static final String ORDER_PAY_CHANGE_CD = "99";
+	public static final String ORDER_PAY_CHANGE_NAME = "找零";
+	
 	
 }
