@@ -100,6 +100,11 @@ public class Structs {
 		public String documentDate;
 		public String[] operator;
 		public String remarks;
+		
+		public String printWSDL;
+		public String printNameSpace;
+		public String printMethod;
+		public String printFlag;
 
 	}
 
