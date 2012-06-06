@@ -1,9 +1,12 @@
 package com.netsdl.android.common;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.MessageDigest;
@@ -12,6 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -207,10 +213,72 @@ public class Util {
 		return info.getMacAddress();
 	}
 
+	public static String getIpAddress(Context context) {
+		WifiManager wifi = (WifiManager) context
+				.getSystemService(Context.WIFI_SERVICE);
+		WifiInfo info = wifi.getConnectionInfo();
+		return intToIp(info.getIpAddress());
+	}
+
+	public static String intToIp(int i) {
+		return ((i >> 24) & 0xFF) + "." + ((i >> 16) & 0xFF) + "."
+				+ ((i >> 8) & 0xFF) + "." + (i & 0xFF);
+	}
+
 	public static String getLocalDeviceId(Context context) {
 		TelephonyManager telephonyManager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDeviceId();
+	}
+
+	public static void ftpUpload(String filepath, String filename,
+			String ftpUrl, String ftpUser, String ftpPassword) {
+		FileInputStream input = null;
+		FTPClient ftpClient = null;
+
+		try {
+			ftpClient = new FTPClient();
+			ftpClient.connect(ftpUrl);
+			ftpClient.login(ftpUser, ftpPassword);
+
+			int reply = ftpClient.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				ftpClient.disconnect();
+				ftpClient = null;
+				return;
+			}
+
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			ftpClient.enterLocalPassiveMode();
+
+			input = new FileInputStream(filepath + File.separatorChar
+					+ filename);
+			ftpClient.storeFile(filename, input);
+
+			ftpClient.logout();
+
+		} catch (SocketException e) {
+		} catch (IOException e) {
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+				}
+				input = null;
+			}
+			if (ftpClient != null) {
+				if (ftpClient.isConnected()) {
+					try {
+						ftpClient.disconnect();
+					} catch (IOException e) {
+					}
+					ftpClient = null;
+				}
+			}
+
+		}
+
 	}
 
 }
