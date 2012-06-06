@@ -1,5 +1,6 @@
 package com.netsdl.android.common;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class Structs {
@@ -88,7 +89,8 @@ public class Structs {
 		}
 	}
 
-	public class DeviceItem {
+	public class DeviceItem implements Serializable {
+		private static final long serialVersionUID = 3344079987392960944L;
 		public DeviceItem() {
 
 		}
