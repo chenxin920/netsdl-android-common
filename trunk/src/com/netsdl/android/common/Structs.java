@@ -3,8 +3,6 @@ package com.netsdl.android.common;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.netsdl.android.main.view.Login.Status;
-
 public class Structs implements Serializable{
 	private static final long serialVersionUID = 7140676115707227296L;
 
@@ -119,9 +117,14 @@ public class Structs implements Serializable{
 	
 	public class LoginViewData implements Serializable {
 		private static final long serialVersionUID = 5956154244068859349L;
-		public Status status = Status.operaterID;
+		public LoginStatus status = LoginStatus.operaterID;
 		public Object[] storeObjs;
 		public String text = "";
-	}
+		
 
+	}
+	
+	public enum LoginStatus implements Serializable {
+		operaterID, password
+	}
 }
