@@ -3,9 +3,14 @@ package com.netsdl.android.common;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Structs {
+import com.netsdl.android.main.view.Login.Status;
 
-	public class Item {
+public class Structs implements Serializable{
+	private static final long serialVersionUID = 7140676115707227296L;
+
+	public class Item implements Serializable{
+		private static final long serialVersionUID = 6751519151605241578L;
+
 		public Item() {
 		}
 
@@ -23,7 +28,7 @@ public class Structs {
 		}
 	}
 
-	public enum Type {
+	public enum Type implements Serializable{
 		type1 {
 			public DocumentType toDocumentType() {
 				return DocumentType.DO;
@@ -62,7 +67,7 @@ public class Structs {
 
 	}
 
-	public enum DocumentType {
+	public enum DocumentType implements Serializable{
 		DO {
 			public String toString() {
 				return "DO";
@@ -76,7 +81,7 @@ public class Structs {
 
 	}
 
-	public enum RtnType {
+	public enum RtnType implements Serializable{
 		P1 {
 			public String toString() {
 				return "1";
@@ -97,17 +102,26 @@ public class Structs {
 
 		public String deviceID;
 		public String[] shop;
+		public String[] outOfShop;
 		public String[] custom;
 		public String[] salesType;
 		public String documentDate;
 		public String[] operator;
 		public String remarks;
 		
+		public int intStart;
 		public String printWSDL;
 		public String printNameSpace;
 		public String printMethod;
 		public String printFlag;
 
+	}
+	
+	public class LoginViewData implements Serializable {
+		private static final long serialVersionUID = 5956154244068859349L;
+		public Status status = Status.operaterID;
+		public Object[] storeObjs;
+		public String text = "";
 	}
 
 }

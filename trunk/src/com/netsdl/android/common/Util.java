@@ -26,7 +26,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.netsdl.android.common.db.SkuMaster;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
