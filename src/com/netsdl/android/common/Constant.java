@@ -20,5 +20,8 @@ public class Constant {
 	public static final String ORDER_PAY_CHANGE_CD = "99";
 	public static final String ORDER_PAY_CHANGE_NAME = "找零";
 	
+	// private static final String INIT_URL = "http://cyr.dip.jp/init.txt";
+	public static final String INIT_URI = "file:///mnt/sdcard/netsdl/pos/init.txt";
+
 	
 }
