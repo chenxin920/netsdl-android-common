@@ -3,6 +3,7 @@ package com.netsdl.android.common;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -31,24 +32,65 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Util {
 	public static final String DEFAULT_LOCAL_DEVICE_ID = "000000000000000";
-	private static final String INIT_URL = "http://cyr.dip.jp/init.txt";
+
+	public static String getSchemeFromURI(String strURI) {
+		int end = strURI.indexOf(':');
+		if (end < 0)
+			return null;
+		String strSub = strURI.substring(end + 1, strURI.length());
+		if (strSub.length() < 2)
+			return null;
+		return strURI.substring(0, end);
+	}
+
+	public static BufferedReader getBufferedReaderFromURI(String strURI,
+			String strEncode) throws URISyntaxException,
+			ClientProtocolException, IOException {
+		String scheme = getSchemeFromURI(strURI);
+		if ("file".equalsIgnoreCase(scheme)) {
+			return new BufferedReader(new InputStreamReader(
+					new FileInputStream(strURI.substring(scheme.length() + 3,
+							strURI.length())), strEncode));
+		} else {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet();
+			request.setURI(new URI(strURI));
+			HttpResponse response = client.execute(request);
+			return new BufferedReader(new InputStreamReader(response
+					.getEntity().getContent(), strEncode));
+		}
+
+	}
+
+	public static BufferedReader getBufferedReaderFromURI(String strURI)
+			throws URISyntaxException, ClientProtocolException, IOException {
+		String scheme = getSchemeFromURI(strURI);
+		if ("file".equalsIgnoreCase(scheme)) {
+			return new BufferedReader(new InputStreamReader(
+					new FileInputStream(strURI.substring(scheme.length() + 3,
+							strURI.length()))));
+		} else {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet request = new HttpGet();
+			request.setURI(new URI(strURI));
+			HttpResponse response = client.execute(request);
+			return new BufferedReader(new InputStreamReader(response
+					.getEntity().getContent()));
+		}
+	}
 
 	public static Map<String, String> getInitInfo() throws URISyntaxException,
 			ClientProtocolException, IOException {
 		BufferedReader in = null;
 		try {
 			in = null;
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet();
-			request.setURI(new URI(INIT_URL));
-			HttpResponse response = client.execute(request);
-			in = new BufferedReader(new InputStreamReader(response.getEntity()
-					.getContent()));
+			in = getBufferedReaderFromURI(Constant.INIT_URI);
 			String line = in.readLine();
 			Map<String, String> map = new HashMap<String, String>();
 			while (line != null) {
@@ -76,12 +118,7 @@ public class Util {
 		BufferedReader in = null;
 		try {
 			in = null;
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet();
-			request.setURI(new URI(url));
-			HttpResponse response = client.execute(request);
-			in = new BufferedReader(new InputStreamReader(response.getEntity()
-					.getContent()));
+			in = getBufferedReaderFromURI(url);
 			Map<String, String> map = new HashMap<String, String>();
 			String line = in.readLine();
 			map.put(Constant.URL, line);
@@ -210,6 +247,10 @@ public class Util {
 				.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo info = wifi.getConnectionInfo();
 		return info.getMacAddress();
+	}
+
+	public static String ExternalStorageDirectory() {
+		return Environment.getExternalStorageDirectory().toString();
 	}
 
 	public static String getIpAddress(Context context) {
