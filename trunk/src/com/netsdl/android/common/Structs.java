@@ -111,7 +111,10 @@ public class Structs implements Serializable{
 		public String printWSDL;
 		public String printNameSpace;
 		public String printMethod;
-		public String printFlag;
+		public String printFlagIn;
+		public String printFlagOut;
+		
+		
 
 	}
 	
