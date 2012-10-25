@@ -272,7 +272,7 @@ public class Util {
 	}
 
 	public static void ftpUpload(String filepath, String filename,
-			String ftpUrl, String ftpUser, String ftpPassword) {
+			String ftpUrl, String ftpPath, String ftpUser, String ftpPassword) {
 		FileInputStream input = null;
 		FTPClient ftpClient = null;
 
@@ -293,6 +293,9 @@ public class Util {
 
 			input = new FileInputStream(filepath + File.separatorChar
 					+ filename);
+			if (ftpPath != null && ftpPath.trim().length() > 0) {
+				ftpClient.changeWorkingDirectory(ftpPath);
+			}
 			ftpClient.storeFile(filename, input);
 
 			ftpClient.logout();
