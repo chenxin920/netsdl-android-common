@@ -87,6 +87,20 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		Map<String, Object> mapData = parserCSV(datas);
 		insert(mapData);
 	}
+	
+	public void update(Map<String, Object> mapData,String[] whereArgs, String[] whereClause)
+			throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		SQLiteDatabase db = null;
+		try {
+			db = this.getWritableDatabase();
+			DatabaseHelper.update(db, mapData,whereArgs,whereClause, getClass());
+		} finally {
+			if (db != null)
+				db.close();
+		}
+
+	}
 
 	public void deleteByKey(String data) {
 		ContentValues values = new ContentValues();

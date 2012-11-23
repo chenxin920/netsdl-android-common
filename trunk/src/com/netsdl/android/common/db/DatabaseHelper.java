@@ -39,6 +39,7 @@ public class DatabaseHelper {
 	public static Object convertStringToOjbect(Class<?> type, String str) {
 		if (str == null)
 			return null;
+		str = str.trim();
 		if (type.equals(String.class)) {
 			return str;
 		} else if (type.equals(Integer.class)) {
@@ -46,7 +47,20 @@ public class DatabaseHelper {
 				return null;
 			} else {
 				try {
-					Integer iTemp = Integer.valueOf(str);
+					byte[] ss = str.getBytes();
+					byte[] ss2 = new byte[ss.length];
+					int c = 0;
+					for(int i=0;i<ss.length;i++)
+					{
+						if(ss[i]<0)
+							continue;
+						ss2[c] = ss[i];
+						c++;
+					}
+					byte[] ss3 = new byte[c];
+					System.arraycopy(ss2, 0, ss3, 0, c);
+					String str2 = new String(ss3);
+					Integer iTemp = Integer.valueOf(str2);
 					return iTemp;
 				} catch (NumberFormatException nfe) {
 					return null;
@@ -264,6 +278,33 @@ public class DatabaseHelper {
 		}
 
 		contentResolver.insert(uri, values);
+
+	}
+	
+	public static void update(SQLiteDatabase db, Map<String, Object> mapData,String[] whereArgs, String[] whereClause,
+			Class<?> clazz) throws IllegalArgumentException, SecurityException,
+			IllegalAccessException, NoSuchFieldException {
+		String tableName = (String) clazz.getField(Constant.TABLE_NAME).get(
+				clazz);
+		String[] COLUMNS = (String[]) clazz.getField(Constant.COLUMNS).get(
+				clazz);
+
+		ContentValues values = new ContentValues();
+
+		for (int i = 0; i < COLUMNS.length; i++) {
+			Object obj = mapData.get(COLUMNS[i]);
+			if (obj == null) {
+				continue;
+			} else if (obj instanceof String) {
+				values.put(COLUMNS[i], obj.toString());
+			} else if (obj instanceof Integer) {
+				values.put(COLUMNS[i], (Integer) obj);
+			} else if (obj instanceof BigDecimal) {
+				values.put(COLUMNS[i], ((BigDecimal) obj).toString());
+			}
+		}
+		String[] KEYS = (String[]) clazz.getField(Constant.KEYS).get(clazz);
+		db.update(tableName, values, getWhereClause(whereClause, KEYS), whereArgs);
 
 	}
 

@@ -25,13 +25,14 @@ public class PosTable extends DatabaseHandler {
 	public static final String COLUMN_QTY = "qty"; // 数量
 	public static final String COLUMN_S_AMT = "s_amt"; // 标准金额
 	public static final String COLUMN_P_AMT = "p_amt"; // 销售金额
+	public static final String COLUMN_END_DAY = "end_day"; // 日结标记
 
 	public static final String[] COLUMNS = { COLUMN_ORDER_NO,
 			COLUMN_ORDER_DATE, COLUMN_CREATE_DATE, COLUMN_ORDER_TYPE,
 			COLUMN_RTN, COLUMN_WH_NO, COLUMN_WH_NAME, COLUMN_CUST_NO,
 			COLUMN_CUST_NAME, COLUMN_USER_NO, COLUMN_USER_NAME, COLUMN_FLAG,
 			COLUMN_SKU_CD, COLUMN_ITEM_NAME, COLUMN_ITEM_COST, COLUMN_S_PRICE,
-			COLUMN_P_PRICE, COLUMN_QTY, COLUMN_S_AMT, COLUMN_P_AMT };
+			COLUMN_P_PRICE, COLUMN_QTY, COLUMN_S_AMT, COLUMN_P_AMT,COLUMN_END_DAY };
 
 	public static final String[] KEYS = { COLUMN_ORDER_NO, COLUMN_SKU_CD };
 
@@ -55,13 +56,14 @@ public class PosTable extends DatabaseHandler {
 	public static final Class<BigDecimal> TYPE_QTY = BigDecimal.class;
 	public static final Class<BigDecimal> TYPE_S_AMT = BigDecimal.class;
 	public static final Class<BigDecimal> TYPE_P_AMT = BigDecimal.class;
+	public static final Class<Integer> TYPE_END_DAY = Integer.class;
 
 	public static final Class<?>[] TYPES = { TYPE_ORDER_NO, TYPE_ORDER_DATE,
 			TYPE_CREATE_DATE, TYPE_ORDER_TYPE, TYPE_RTN, TYPE_WH_NO,
 			TYPE_WH_NAME, TYPE_CUST_NO, TYPE_CUST_NAME, TYPE_USER_NO,
 			TYPE_USER_NAME, TYPE_FLAG, TYPE_SKU_CD, TYPE_ITEM_NAME,
 			TYPE_ITEM_COST, TYPE_S_PRICE, TYPE_P_PRICE, TYPE_QTY, TYPE_S_AMT,
-			TYPE_P_AMT };
+			TYPE_P_AMT ,TYPE_END_DAY};
 
 	public static final Class<?>[] KEY_TYPES = { TYPE_ORDER_NO, TYPE_SKU_CD };
 
@@ -113,7 +115,7 @@ public class PosTable extends DatabaseHandler {
 				+ COLUMN_S_PRICE + " decimal(16, 2)," + COLUMN_P_PRICE
 				+ " decimal(16, 2)," + COLUMN_QTY + " decimal(16, 2),"
 				+ COLUMN_S_AMT + " decimal(16, 2)," + COLUMN_P_AMT
-				+ " decimal(16, 2)" + ", primary key ( " + COLUMN_ORDER_NO
+				+ " decimal(16, 2),"+ COLUMN_END_DAY + " int" + ", primary key ( " + COLUMN_ORDER_NO
 				+ " ," + COLUMN_SKU_CD + " ) " + ")";
 		return CREATE_TABLE;
 	}

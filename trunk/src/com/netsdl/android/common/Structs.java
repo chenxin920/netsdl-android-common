@@ -15,13 +15,21 @@ public class Structs implements Serializable{
 		public BigDecimal price;
 		public Integer count;
 		public BigDecimal lumpSum;
+		public Integer itemDiscount;
 
 		public Object clone() throws CloneNotSupportedException {
 			Item itemNew = new Item();
 
 			itemNew.price = price.add(new BigDecimal("0"));
-			itemNew.count = new Integer(count);
+			if(count!=null)
+				itemNew.count = new Integer(count);
+			else
+				itemNew.count = new Integer(0);
 			itemNew.lumpSum = lumpSum.add(new BigDecimal("0"));
+			if(itemDiscount!=null)
+				itemNew.itemDiscount = new Integer(itemDiscount);
+			else
+				itemNew.itemDiscount = new Integer(100);
 			return itemNew;
 		}
 	}
