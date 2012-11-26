@@ -10,7 +10,7 @@ public class DeviceMaster extends DatabaseHandler {
 	public static final String COLUMN_FIELD_01 = "field_01"; // 域01
 	public static final String COLUMN_FIELD_02 = "field_02"; // 域02
 	public static final String COLUMN_FIELD_03 = "field_03"; // 域03
-	public static final String COLUMN_FIELD_04 = "field_04"; // 域04
+	public static final String COLUMN_FIELD_04 = "field_04"; // 域04--(1-营业日期)
 	public static final String COLUMN_FIELD_05 = "field_05"; // 域05
 	public static final String COLUMN_FIELD_06 = "field_06"; // 域06
 	public static final String COLUMN_FIELD_07 = "field_07"; // 域07

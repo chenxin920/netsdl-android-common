@@ -62,7 +62,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 		return parserCSV(datas);
 	}
 
-	private void insert(Map<String, Object> mapData)
+	public void insert(Map<String, Object> mapData)
 			throws IllegalArgumentException, SecurityException,
 			IllegalAccessException, NoSuchFieldException {
 		SQLiteDatabase db = null;
