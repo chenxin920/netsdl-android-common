@@ -3,9 +3,11 @@ package com.netsdl.android.common;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
@@ -25,8 +27,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.netsdl.android.common.db.SkuMaster;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,6 +35,8 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.netsdl.android.common.db.SkuMaster;
 
 public class Util {
 	public static final String DEFAULT_LOCAL_DEVICE_ID = "000000000000000";
@@ -323,5 +325,28 @@ public class Util {
 		}
 
 	}
+	
+	public static int CopyFile(String fromFile, String toFile)
+    {
+         
+        try
+        {
+            InputStream fosfrom = new FileInputStream(fromFile);
+            OutputStream fosto = new FileOutputStream(toFile);
+            byte bt[] = new byte[1024];
+            int c;
+            while ((c = fosfrom.read(bt)) > 0) 
+            {
+                fosto.write(bt, 0, c);
+            }
+            fosfrom.close();
+            fosto.close();
+            return 0;
+             
+        } catch (Exception ex) 
+        {
+            return -1;
+        }
+    }
 
 }
