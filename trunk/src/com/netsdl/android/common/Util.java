@@ -356,7 +356,8 @@ public class Util {
 	 * @param digit
 	 * @return
 	 */
-	public static BigDecimal round(BigDecimal num,int digit) {
+	public static BigDecimal round(BigDecimal num) {
+		int digit = 2;
 		if(num==null)
 			return new BigDecimal(0);
 		BigDecimal a = num.setScale(digit, BigDecimal.ROUND_HALF_UP);
